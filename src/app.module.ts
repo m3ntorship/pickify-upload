@@ -3,7 +3,7 @@ import { PromModule } from '@digikare/nestjs-prom';
 import { ConfigModule } from '@nestjs/config';
 import configuration from './config/configuration';
 import * as swaggerUi from 'swagger-ui-express';
-import * as swaggerDocument from '../openapi/example.openapi.json';
+import * as swaggerDocument from '../openAPI/upload.openAPI.json';
 
 const evnVariable = process.env.NODE_ENV || 'development';
 @Module({
