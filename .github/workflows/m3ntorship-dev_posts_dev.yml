@@ -2,11 +2,11 @@ name: deploy service PR
 on:
   push:
     branches:
-      - main
+      - development
 
 env:
   M3_PROJECT: pickify
-  M3_COMPONENT: template
+  M3_COMPONENT: upload
   M3_ENVIRONMENT: 'be-dev'
   M3_NAMESPACE: '${{github.event.organization.login}}-${{github.event.repository.name}}-dev'
   M3_DEPLOYMENT_PATH: deploy/apply
@@ -17,11 +17,10 @@ env:
   M3_PORT_BACKEND: 80
   M3_PORT_BACKEND_MOCK: 81
   M3_DOCKER_FILE: Dockerfile
-  M3_IMAGE: m3ntorshipci/service-template
+  M3_IMAGE: m3ntorshipci/upload-service
   M3_MOCK_IMAGE: m3ntorshipci/prism:latest
   M3_HOST_NAME: pickify.net
-  M3_ELEPHANTSQL_URL: ${{secrets.ELEPHANTSQL_URL}}
-  M3_SERVICE_OPENAPI_SPECIFICATION: https://raw.githubusercontent.com/m3ntorship/backend-nestjs-template/main/openapi/example.openapi.yml
+  M3_SERVICE_OPENAPI_SPECIFICATION: https://raw.githubusercontent.com/m3ntorship/pickify-upload/development/openAPI/upload.openAPI.yml
   M3_NODE_ENV: production
   
 jobs:
@@ -48,6 +47,7 @@ jobs:
           echo "m3_version $M3_VERSION"
 
   build:
+    if: ${{github.event.action != 'closed'}}
     needs:
       - prepare
     runs-on: ubuntu-latest
@@ -76,6 +76,7 @@ jobs:
           push: true
 
   deploy-dev:
+    if: ${{github.event.action != 'closed'}}
     needs:
       - prepare
       - build
